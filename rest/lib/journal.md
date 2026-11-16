@@ -3,3 +3,5 @@ plan to build a flutter app that displays a list of digital albums. I use an alb
 learned how to get a list of albums from the server and display them in my app. The app uses JSON to turn the information into Album objects.
 
 learned how to use a state vareiable to keep track of the selected album. When I click a different album, the details update on the screen
+
+Whenever I added my new code for the project, the app would stop working, the problems is the (context)
