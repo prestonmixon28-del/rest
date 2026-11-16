@@ -43,6 +43,7 @@ class _AlbumPageState extends State<AlbumPage> {
   }
 
   late Future<List<Album>> albums;
+  Album? selectedAlbum;
 
   @override
   void initState() {
@@ -59,46 +60,66 @@ class _AlbumPageState extends State<AlbumPage> {
         foregroundColor: Colors.white,
       ),
       body: FutureBuilder<List<Album>>(
-        future: albums,
-        builder: (context, snapshot) {
+  future: albums,
+  builder: (context, snapshot) {
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text('Error loading albums'),
-            );
-          }
+    if (snapshot.hasError) {
+      return const Center(
+        child: Text('Error loading albums'),
+      );
+    }
 
-          final albumList = snapshot.data!;
+    final albumList = snapshot.data!;
 
-          return ListView.builder(
+    return Column(
+      children: [
+
+        // Selected Album Details
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          color: Colors.blue.shade50,
+          child: selectedAlbum == null
+              ? const Text('No Album Selected')
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Title: ${selectedAlbum!.title}'),
+                    Text('Album ID: ${selectedAlbum!.id}'),
+                    Text('User ID: ${selectedAlbum!.userId}'),
+                  ],
+                ),
+        ),
+
+        // Album List
+        Expanded(
+          child: ListView.builder(
             itemCount: albumList.length,
             itemBuilder: (context, index) {
               final album = albumList[index];
 
               return ListTile(
-
                 title: Text(album.title),
-
                 subtitle: Text('Album ID: ${album.id}'),
-
+                onTap: () {
+                  setState(() {
+                    selectedAlbum = album;
+                  });
+                },
               );
-
             },
-
-          );
-
-        },
-
-      ),
-
+          ),
+        ),
+      ],
     );
-
+  },
+),
+    );
   }
-
 }
